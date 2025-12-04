@@ -99,14 +99,8 @@ const generateTraceSearchQuery = (options: QueryBuilderOptions): string => {
   return concatQueryParts(queryParts);
 };
 
-const arrayMapForMapOrJson = (columnName: string) => {
-  return [
-    `IF(`,
-    `toTypeName(${escapeIdentifier(columnName)}) LIKE 'JSON%'`,
-    `arrayMap(x -> map('key', x.1::String, 'value', x.2::String), JSONExtractKeysAndValues(${escapeIdentifier(columnName)}::String, 'String'))`,
-    `arrayMap(key -> map('key', key, 'value',${escapeIdentifier(columnName)}[key]), mapKeys(${escapeIdentifier(columnName)}))`,
-    `)`,
-  ].join(' ');
+const arrayMapForJson = (columnName: string) => {
+  return `arrayMap(x -> map('key', x.1::String, 'value', x.2::String), JSONExtractKeysAndValues(${escapeIdentifier(columnName)}::String, 'String'))`;
 }
 
 /**
@@ -160,12 +154,12 @@ const generateTraceIdQuery = (options: QueryBuilderOptions): string => {
   // TODO: for tags and serviceTags, consider the column type. They might not require mapping, they could already be JSON.
   const traceTags = getColumnByHint(options, ColumnHint.TraceTags);
   if (traceTags !== undefined) {
-    selectParts.push(`${arrayMapForMapOrJson(escapeIdentifier(traceTags.name))} as tags`);
+    selectParts.push(`${arrayMapForJson(traceTags.name)} as tags`);
   }
 
   const traceServiceTags = getColumnByHint(options, ColumnHint.TraceServiceTags);
   if (traceServiceTags !== undefined) {
-    selectParts.push(`${arrayMapForMapOrJson(escapeIdentifier(traceServiceTags.name))} as serviceTags`);
+    selectParts.push(`${arrayMapForJson(traceServiceTags.name)} as serviceTags`);
   }
 
   const traceStatusCode = getColumnByHint(options, ColumnHint.TraceStatusCode);
@@ -183,7 +177,7 @@ const generateTraceIdQuery = (options: QueryBuilderOptions): string => {
       selectParts.push(
         [
           `arrayMap(event -> tuple(multiply(toFloat64(event.Timestamp), 1000),`,
-          `arrayConcat(${arrayMapForMapOrJson("event.Attributes")}, [map('key', 'message', 'value', event.Name)]))::Tuple(timestamp Float64, fields Array(Map(String, String))),`,
+          `arrayConcat(${arrayMapForJson("event.Attributes")}, [map('key', 'message', 'value', event.Name)]))::Tuple(timestamp Float64, fields Array(Map(String, String))),`,
           `${escapeIdentifier(traceEventsPrefix)}) as logs`,
         ].join(' ')
       );
@@ -191,7 +185,7 @@ const generateTraceIdQuery = (options: QueryBuilderOptions): string => {
       selectParts.push(
         [
           `arrayMap((name, timestamp, attributes) -> tuple(name, toString(toUnixTimestamp64Milli(timestamp)),`,
-          `${arrayMapForMapOrJson("attributes")})::Tuple(name String, timestamp String, fields Array(Map(String, String))),`,
+          `${arrayMapForJson("attributes")})::Tuple(name String, timestamp String, fields Array(Map(String, String))),`,
           `${escapeIdentifier(traceEventsPrefix)}.Name, ${escapeIdentifier(traceEventsPrefix)}.Timestamp,`,
           `${escapeIdentifier(traceEventsPrefix)}.Attributes) AS logs`,
         ].join(' ')
@@ -204,14 +198,14 @@ const generateTraceIdQuery = (options: QueryBuilderOptions): string => {
     if (flattenNested) {
       selectParts.push(
         [
-          `arrayMap(link -> tuple(link.TraceId, link.SpanId, ${arrayMapForMapOrJson("link.Attributes")})::Tuple(traceID String, spanID String, tags Array(Map(String, String))),`,
+          `arrayMap(link -> tuple(link.TraceId, link.SpanId, ${arrayMapForJson("link.Attributes")})::Tuple(traceID String, spanID String, tags Array(Map(String, String))),`,
           `${escapeIdentifier(traceLinksPrefix)}) AS references`,
         ].join(' ')
       );
     } else {
       selectParts.push(
         [
-          `arrayMap((traceID, spanID, attributes) -> tuple(traceID, spanID, ${arrayMapForMapOrJson("attributes")})::Tuple(traceID String, spanID String, tags Array(Map(String, String))),`,
+          `arrayMap((traceID, spanID, attributes) -> tuple(traceID, spanID, ${arrayMapForJson("attributes")})::Tuple(traceID String, spanID String, tags Array(Map(String, String))),`,
           `${escapeIdentifier(traceLinksPrefix)}.TraceId, ${escapeIdentifier(traceLinksPrefix)}.SpanId,`,
           `${escapeIdentifier(traceLinksPrefix)}.Attributes) AS references`,
         ].join(' ')
