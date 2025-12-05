@@ -212,7 +212,7 @@ export const useDefaultFilters = (
       } as StringFilter,
       {
         type: 'string',
-        operator: FilterOperator.NotEquals,
+        operator: FilterOperator.Equals,
         filterType: 'custom',
         key: '',
         hint: ColumnHint.LogServiceName,
