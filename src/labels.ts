@@ -389,6 +389,10 @@ export default {
         label: 'Labels',
         tooltip: 'A column with a key/value structure for log labels',
       },
+      logServiceNameColumn: {
+        label: 'Service Name',
+        tooltip: 'Column that contains the service name for logs',
+      },
       liveView: {
         label: 'Live View',
         tooltip: 'Enable to update logs in real time',
@@ -529,6 +533,7 @@ export default {
       [ColumnHint.LogMessage]: 'Message',
       [ColumnHint.LogLabels]: 'Labels',
 
+      [ColumnHint.LogServiceName]: 'Service Name',
       [ColumnHint.TraceId]: 'Trace ID',
       [ColumnHint.TraceSpanId]: 'Span ID',
       [ColumnHint.TraceParentSpanId]: 'Parent Span ID',

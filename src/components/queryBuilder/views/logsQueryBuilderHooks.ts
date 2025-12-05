@@ -210,6 +210,15 @@ export const useDefaultFilters = (
         hint: ColumnHint.LogLevel,
         condition: 'AND',
       } as StringFilter,
+      {
+        type: 'string',
+        operator: FilterOperator.Equals,
+        filterType: 'custom',
+        key: '',
+        hint: ColumnHint.LogServiceName,
+        condition: 'AND',
+        value: '',
+      } as StringFilter,
     ];
 
     const defaultOrderBy: OrderBy[] = [{ name: '', hint: ColumnHint.Time, dir: OrderByDirection.DESC, default: true }];

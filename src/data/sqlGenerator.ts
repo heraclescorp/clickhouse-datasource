@@ -341,6 +341,12 @@ const generateLogsQuery = (_options: QueryBuilderOptions): string => {
     selectParts.push(getColumnIdentifier(logLabels));
   }
 
+  const logServiceName = getColumnByHint(options, ColumnHint.LogServiceName);
+  if (logServiceName !== undefined) {
+    logServiceName.alias = logColumnHintsToAlias.get(ColumnHint.LogServiceName);
+    selectParts.push(getColumnIdentifier(logServiceName));
+  }
+
   const traceId = getColumnByHint(options, ColumnHint.TraceId);
   if (traceId !== undefined) {
     traceId.alias = logColumnHintsToAlias.get(ColumnHint.TraceId);
@@ -907,6 +913,7 @@ const logAliasToColumnHintsEntries: ReadonlyArray<[string, ColumnHint]> = [
   ['body', ColumnHint.LogMessage],
   ['level', ColumnHint.LogLevel],
   ['labels', ColumnHint.LogLabels],
+  ['serviceName', ColumnHint.LogServiceName],
   ['traceID', ColumnHint.TraceId],
 ];
 export const logAliasToColumnHints: Map<string, ColumnHint> = new Map(logAliasToColumnHintsEntries);
