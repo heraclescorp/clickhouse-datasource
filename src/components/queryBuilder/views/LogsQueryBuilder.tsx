@@ -38,6 +38,7 @@ interface LogsQueryBuilderState {
   logLevelColumn?: SelectedColumn;
   messageColumn?: SelectedColumn;
   labelsColumn?: SelectedColumn;
+  serviceNameColumn?: SelectedColumn;
   // liveView: boolean;
   orderBy: OrderBy[];
   limit: number;
@@ -58,6 +59,7 @@ export const LogsQueryBuilder = (props: LogsQueryBuilderProps) => {
       logLevelColumn: getColumnByHint(builderOptions, ColumnHint.LogLevel),
       messageColumn: getColumnByHint(builderOptions, ColumnHint.LogMessage),
       labelsColumn: getColumnByHint(builderOptions, ColumnHint.LogLabels),
+      serviceNameColumn: getColumnByHint(builderOptions, ColumnHint.LogServiceName),
       selectedColumns:
         builderOptions.columns?.filter(
           (c) =>
@@ -65,7 +67,8 @@ export const LogsQueryBuilder = (props: LogsQueryBuilderProps) => {
             c.hint !== ColumnHint.Time &&
             c.hint !== ColumnHint.LogLevel &&
             c.hint !== ColumnHint.LogMessage &&
-            c.hint !== ColumnHint.LogLabels
+            c.hint !== ColumnHint.LogLabels &&
+            c.hint !== ColumnHint.LogServiceName
         ) || [],
       // liveView: builderOptions.meta?.liveView || false,
       filters: builderOptions.filters || [],
@@ -92,6 +95,9 @@ export const LogsQueryBuilder = (props: LogsQueryBuilderProps) => {
     }
     if (next.labelsColumn) {
       nextColumns.push(next.labelsColumn);
+    }
+    if (next.serviceNameColumn) {
+      nextColumns.push(next.serviceNameColumn);
     }
 
     builderOptionsDispatch(
@@ -196,6 +202,18 @@ export const LogsQueryBuilder = (props: LogsQueryBuilderProps) => {
           columnHint={ColumnHint.LogLabels}
           label={labels.logLabelsColumn.label}
           tooltip={labels.logLabelsColumn.tooltip}
+          inline
+        />
+        <ColumnSelect
+          disabled={builderState.otelEnabled}
+          allColumns={allColumns}
+          selectedColumn={builderState.serviceNameColumn}
+          invalid={!builderState.serviceNameColumn}
+          onColumnChange={onOptionChange('serviceNameColumn')}
+          columnFilterFn={columnFilterString}
+          columnHint={ColumnHint.LogServiceName}
+          label={labels.logServiceNameColumn.label}
+          tooltip={labels.logServiceNameColumn.tooltip}
           inline
         />
         {/* <Switch

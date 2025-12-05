@@ -30,6 +30,7 @@ const otel129: OtelVersion = {
     [ColumnHint.LogMessage, 'Body'],
     [ColumnHint.LogLevel, 'SeverityText'],
     [ColumnHint.LogLabels, 'LogAttributes'],
+    [ColumnHint.LogServiceName, 'ServiceName'],
     [ColumnHint.TraceId, 'TraceId'],
   ]),
   logLevels: ['TRACE', 'DEBUG', 'INFO', 'WARN', 'ERROR', 'FATAL'],

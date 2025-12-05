@@ -145,6 +145,7 @@ export enum ColumnHint {
   LogLevel = 'log_level',
   LogMessage = 'log_message',
   LogLabels = 'log_labels',
+  LogServiceName = 'log_service_name',
 
   TraceId = 'trace_id',
   TraceSpanId = 'trace_span_id',
