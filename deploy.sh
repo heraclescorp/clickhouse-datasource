@@ -10,6 +10,6 @@ npm run build
 
 mage
 
-zip -vr aven-grafana-clickhouse-datasource.zip dist
+zip -vr grafana-clickhouse-datasource.zip dist
 
-aws s3 cp aven-grafana-clickhouse-datasource.zip s3://aven-grafana-apps/aven-grafana-clickhouse-datasource.zip
+aws s3 cp grafana-clickhouse-datasource.zip s3://aven-grafana-apps/grafana-clickhouse-datasource.zip

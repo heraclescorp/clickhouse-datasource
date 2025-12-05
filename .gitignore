@@ -39,4 +39,4 @@ pkg/__debug_bin
 /blob-report/
 /playwright/.cache/
 /playwright/.auth/
-aven-grafana-clickhouse-datasource.zip
+grafana-clickhouse-datasource.zip
