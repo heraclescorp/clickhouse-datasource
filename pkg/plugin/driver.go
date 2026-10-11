@@ -476,7 +476,7 @@ func mergeOpenTelemetryLabels(frame *data.Frame) error {
 			continue
 		}
 
-		if field.Name == "ResourceAttributes" || field.Name == "ScopeAttributes" || field.Name == "LogAttributes" {
+		if field.Name == "ResourceAttributes" || field.Name == "ScopeAttributes" || field.Name == "LogAttributes" || field.Name == "DecryptedLogArgs" {
 			attrFields = append(attrFields, field)
 		}
 	}
@@ -527,7 +527,7 @@ func mergeOpenTelemetryLabels(frame *data.Frame) error {
 
 	filteredFields := make([]*data.Field, 0, len(frame.Fields)-len(attrFields))
 	for _, field := range frame.Fields {
-		if field.Name == "ResourceAttributes" || field.Name == "ScopeAttributes" || field.Name == "LogAttributes" {
+		if field.Name == "ResourceAttributes" || field.Name == "ScopeAttributes" || field.Name == "LogAttributes" || field.Name == "DecryptedLogArgs" {
 			continue
 		}
 
